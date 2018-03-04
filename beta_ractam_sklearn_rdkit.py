@@ -59,6 +59,7 @@ Fingerprint = np.array(Fingerprint).reshape(655,-1)
 #필요없는 feature 제거  
 
 X_Finger_Maccs=np.column_stack((X_raw,Fingerprint,Maccs))
+
 kf = KFold(n_splits=5)
 #crossvalidation 
 
