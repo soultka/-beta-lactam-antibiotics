@@ -2,3 +2,7 @@
 # word temporary #
 
 ~$*.doc*
+
+# python compile file #
+
+*.pyc
