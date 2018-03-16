@@ -109,41 +109,89 @@ for sm in Smiles2.astype(str):
 for sm in Smiles3.astype(str):
     Mol.append(Chem.MolFromSmiles(sm))
 
-Fingerprint=[]
-MKbits = []
-molD = []
-Graph = []
-Des = []
+
+Fingerprint=np.array([])
+MKbits = np.array([])
+rd_Des = np.array([])
+Graph = np.array([])
+Des = np.array([])
+Est_VSA = np.array([])
+
 for mol in Mol:
-    Fingerprint.append(Fingerprinter.FingerprintMol(mol))
     bv = MACCSkeys.GenMACCSKeys(mol)
     keysbits=tuple(bv.GetOnBits())
     MK = np.zeros(166).astype(int)
     for bit in keysbits:
         MK[bit-1] = 1
-    MKbits.append(MK)    
-    molD.append(rdMolDescriptors.CalcAUTOCORR2D(mol))
-    Graph.append(GraphDescriptors.BalabanJ(mol))
-    minChg , maxChg = Descriptors._ChargeDescriptors(mol)
-    Des.append(minChg)
-    Des.append(maxChg)
+    MKbits = np.append(MKbits,MK)    
     
-MKbits = np.array(MKbits)
-Maccs = MKbits.reshape(3169,-1)
-molD = np.array(molD)
-Graph = np.array(Graph)
-Des = np.array(Des).reshape(3169,-1)
-Fingerprint = np.array(Fingerprint).reshape(3169,-1)    
+    Fingerprint = np.append(Fingerprint,Fingerprinter.FingerprintMol(mol))
+    
+    Graph = np.append(Graph,GraphDescriptors.BalabanJ(mol))
+    
+    minChg , maxChg = Descriptors._ChargeDescriptors(mol)
+    Des = np.append(Des,minChg)
+    Des = np.append(Des,maxChg)
+    Des = np.append(Des,Descriptors.NumValenceElectrons(mol))
+    Des = np.append(Des,Descriptors.NumRadicalElectrons(mol))
+    Des = np.append(Des,Descriptors._ChargeDescriptors(mol))
+    
+    Est_VSA = np.append(Est_VSA,EState_VSA.EState_VSA_(mol))
+   
+    rd_Des = np.append(rd_Des,rdMolDescriptors.CalcAUTOCORR2D(mol))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcCrippenDescriptors(mol)[0])) #tuple 2
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcCrippenDescriptors(mol)[1]) )#tuple 2
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcExactMolWt(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcFractionCSP3(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcTPSA(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.MQNs_(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.PEOE_VSA_(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.SMR_VSA_(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.SlogP_VSA_(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcHallKierAlpha(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcKappa1(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcLabuteASA(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumAliphaticCarbocycles(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumAliphaticHeterocycles(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumAliphaticRings(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumAmideBonds(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumAromaticCarbocycles(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumAromaticHeterocycles(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumAromaticRings(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumAtomStereoCenters(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumBridgeheadAtoms(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumHBA(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumHBD(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumHeteroatoms(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumHeterocycles(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumLipinskiHBA(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumLipinskiHBD(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumRings(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumRotatableBonds(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumSaturatedCarbocycles(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumSaturatedHeterocycles(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumSaturatedRings(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumSpiroAtoms(mol)))
+    rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumUnspecifiedAtomStereoCenters(mol)))
 
-X_Finger_Maccs=np.column_stack((X_raw,Fingerprint,Maccs,molD,Graph,Des))
+    
+
+Fingerprint = Fingerprint.reshape(3169,-1) 
+MKbits = MKbits.reshape(3169,-1)
+rd_Des = rd_Des.reshape(3169,-1)
+Graph = Graph.reshape(3169,-1)
+Des = Des.reshape(3169,-1)
+Est_VSA = Est_VSA.reshape(3169,-1)
+
+X_Finger_Maccs=np.column_stack((X_raw,Fingerprint,MKbits,rd_Des,Graph,Des,Est_VSA))
 y = np.array(y)
 it=0;
 kf = KFold(n_splits=5)
 for train_index, test_index in kf.split(X_Finger_Maccs):
     X_train, X_test = X_Finger_Maccs[train_index], X_Finger_Maccs[test_index]
     y_train, y_test = y[train_index], y[test_index]
-    clf = MLPClassifier(hidden_layer_sizes=(530,521,531), batch_size=300, solver ='adam',
-                        learning_rate_init = 0.0001 ,beta_1 = 0.001, beta_2 = 0.001
+    clf = MLPClassifier(hidden_layer_sizes=(624,521,531), batch_size=600, solver ='adam',
+                        learning_rate_init = 0.001 ,beta_1 = 0.001, beta_2 = 0.001
                         ,max_iter=(int)(1479*3169/132))
    
     clf.fit(X_train , y_train)
