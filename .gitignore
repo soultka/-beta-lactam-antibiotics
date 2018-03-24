@@ -6,3 +6,7 @@
 # python compile file #
 
 *.pyc
+
+# python excute file #
+
+*.pkz
