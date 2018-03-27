@@ -10,3 +10,7 @@
 # python excute file #
 
 *.pkz
+
+# pycharm temporary directory #
+
+.idea/
