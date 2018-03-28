@@ -18,7 +18,7 @@ __- [Week 2]__
 __- [Week 3-4]__
  
 1. Basic multi-layer-perceptron report
-
+2. Feature Extractor and feature extraction from chembl350 
 ## 3. Conclusion
 ...
 
