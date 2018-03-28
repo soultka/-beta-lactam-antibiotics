@@ -8,8 +8,6 @@ from rdkit.Chem.EState import AtomTypes,EState,EState_VSA,Fingerprinter
 from rdkit import Chem
 from rdkit.Chem import MACCSkeys,rdMolDescriptors,  GraphDescriptors, Descriptors
 
-columns = ['MOLWEIGHT', 'ALOGP', 'PSA' , 'NUM_RO5_VIOLATIONS','ASSAY_STRAIN_NUM' ]
-
 def make_y (std_Val):
     y = []
     for val in std_Val:
@@ -24,7 +22,7 @@ def make_X_from_df(df, strain_num) :
     for strain in df['ASSAY_STRAIN'] :
         num.append(strain_num[strain])
     df['ASSAY_STRAIN_NUM'] = num
-    X_raw = np.array(df[columns])
+    X_raw = np.array(df['ASSAY_STRAIN_NUM'])
     return X_raw
 
 def makemolfromCanSmiles(df): 
@@ -56,20 +54,19 @@ def makemolfromCanSmiles(df):
         Des = np.append(Des,maxChg)
         Des = np.append(Des,Descriptors.NumValenceElectrons(mol))
         Des = np.append(Des,Descriptors.NumRadicalElectrons(mol))
-        Des = np.append(Des,Descriptors._ChargeDescriptors(mol))
         
         Est_VSA = np.append(Est_VSA,EState_VSA.EState_VSA_(mol))
        
         rd_Des = np.append(rd_Des,rdMolDescriptors.CalcAUTOCORR2D(mol))
+        rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.MQNs_(mol)))
+        rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.PEOE_VSA_(mol)))
+        rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.SMR_VSA_(mol)))
+        rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.SlogP_VSA_(mol)))
         rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcCrippenDescriptors(mol)[0])) #tuple 2
         rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcCrippenDescriptors(mol)[1]) )#tuple 2
         rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcExactMolWt(mol)))
         rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcFractionCSP3(mol)))
         rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcTPSA(mol)))
-        rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.MQNs_(mol)))
-        rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.PEOE_VSA_(mol)))
-        rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.SMR_VSA_(mol)))
-        rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.SlogP_VSA_(mol)))
         rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcHallKierAlpha(mol)))
         rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcKappa1(mol)))
         rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcLabuteASA(mol)))
@@ -111,8 +108,9 @@ def makemolfromCanSmiles(df):
     
     
     
-def accuracy_mlp(Batch_size , Epoch , Hidden_layer ,train_size, X_train, 
-                 y_train, X_test, y_test):
+def accuracy_mlp(Batch_size , Epoch , Hidden_layer ,train_size, X, 
+                 y):
+    X_train,X_test , y_train,y_test = train_test_split(X,y)
     max_it = int(Epoch * Batch_size / train_size) 
     clf = MLPClassifier(hidden_layer_sizes = Hidden_layer ,
                        batch_size = Batch_size , max_iter = max_it)
