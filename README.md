@@ -8,17 +8,18 @@ Deep learning can be applied to Antibiotics and Bacteria, and it is possible to 
 
 __- [Week 1]__
 
-1. Learning of biological classification system
-2. Learing about Machine Learning 
+1. Learn about biological classification system
+2. Learn about Machine Learning 
 
 __- [Week 2]__
 
-1. Data structure preprocessing and model build
+1. Preprocess data structure and build model.
 
 __- [Week 3-4]__
  
-1. Basic multi-layer-perceptron report
-2. Feature Extractor and feature extraction from chembl350 
+1. Practice basic multi-layer-perceptron.
+2. Find feature extractor and extract feature from chembl350.
+
 ## 3. Conclusion
 ...
 
