@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
 import numpy as np
-from sklearn.metrics import confusion_matrix 
-from sklearn.model_selection import train_test_split ,cross_val_predict,KFold,GridSearchCV
 from sklearn.neural_network import MLPClassifier
-from rdkit.Chem.EState import AtomTypes,EState,EState_VSA,Fingerprinter
 from rdkit import Chem
 from rdkit.Chem import MACCSkeys,rdMolDescriptors,  GraphDescriptors, Descriptors
 
-def make_y (std_Val):
+def make_df_from_file(file  ):
+    df = pd.read_csv( file , delimiter='\t')
+    df = df.dropna(subset=['CANONICAL_SMILES'])
+    return df
+    
+def make_y (df):
+    std_Val = df['MIC_microM']
     y = []
     for val in std_Val:
         if val <= 10:
@@ -35,6 +38,7 @@ def makemolfromCanSmiles(df):
     Graph = np.array([])
     Des = np.array([])
     Est_VSA = np.array([])
+    ecfp = np.array([])
     i=1
     
     for mol in Mol:
@@ -92,6 +96,8 @@ def makemolfromCanSmiles(df):
         rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumSaturatedRings(mol)))
         rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumSpiroAtoms(mol)))
         rd_Des = np.append(rd_Des,np.array(rdMolDescriptors.CalcNumUnspecifiedAtomStereoCenters(mol)))
+        
+        #ecfp = np.append(ecfp , np.array(rdMolDescriptors.GetMorganFingerprintAsBitVect(mol,2)))
         if i % 1000 == 0 :
             print(i)
         i+=1
@@ -103,6 +109,7 @@ def makemolfromCanSmiles(df):
     Graph = Graph.reshape(df_len,-1)
     Des = Des.reshape(df_len,-1)
     Est_VSA = Est_VSA.reshape(df_len,-1)
+    #ecfp = ecfp.reshape(df_len, -1)
     
     return np.column_stack((Fingerprint,MKbits,rd_Des,Graph,Des,Est_VSA))
     

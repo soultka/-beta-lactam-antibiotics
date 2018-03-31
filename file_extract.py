@@ -9,9 +9,11 @@ feature_name = ['STRAINNUM','Fingerprint' , 'Maccs' , 'Auto_Corr' , 'MQN','PEOE_
                 ,'LipinskiHBA', 'LipinskiHBD', 'Ring', 'RotatableBond' 
                 ,'SaturatedBond' , 'SaturatedCarbocycles','SaturatedHeterocycles','SaturatedRings','SpiroAtoms', 'UnspecifiedAtomStereoCenters'
                 , 'BalabanJ', 'minChg' , 'maxChg' , 'ValenceElec','RadicalElec'
-                , 'Estate_VSA'] #finger, mkbits , rd_Des ,Graph, Des ,Est_VSa
+                , 'Estate_VSA'  , 'activity'] #finger, mkbits , rd_Des ,Graph, Des ,Est_VSa
 
-feature_size = {'Fingerprint' : 158 ,'Maccs' : 166 , 'Estate_VSA' : 11 , 'Auto_Corr' : 192 , 
+
+
+feature_size = {'ecfp' : 2048, 'Fingerprint' : 158 ,'Maccs' : 166 , 'Estate_VSA' : 11 , 'Auto_Corr' : 192 , 
   'MQN' : 42  , 'PEOE_VSA' : 14 , 'SMR_VSA' : 10 , 'slogP_VSA' : 12  }
 
 feature_route = 'test_result/feature_data/'

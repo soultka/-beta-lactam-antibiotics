@@ -4,13 +4,10 @@ import numpy as np
 import make_X_Y as XY
 import file_extract
 
-df = pd.read_csv('dataset/chembl350.txt', delimiter='\t')
+file_name = input()
 
-df = df.dropna(subset=['CANONICAL_SMILES'])
-
-df_std_unit = df['MIC_microM']
-
-y = XY.make_y(df_std_unit) 
+df = XY.make_df_from_file(file_name)
+y = XY.make_y(df) 
 
 strain_Set = set(df['ASSAY_STRAIN'])
 strain_Num ={}
@@ -22,6 +19,6 @@ X_raw = XY.make_X_from_df(df,strain_Num)
 
 mol_factor = XY.makemolfromCanSmiles(df)
 
-X_train = np.column_stack((X_raw , mol_factor))
+X_feature = np.column_stack((X_raw , mol_factor,y))
 
-file_extract.feature_file_write('350_feature' , X_train)
+file_extract.feature_file_write('350_feature' , X_feature)
