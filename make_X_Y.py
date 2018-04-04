@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 import pandas as pd
 import numpy as np
 from sklearn.neural_network import MLPClassifier
 from rdkit import Chem
 from rdkit.Chem import MACCSkeys,rdMolDescriptors,  GraphDescriptors, Descriptors
 
-def make_df_from_file(file  ):
+def make_df_from_file(file):
     df = pd.read_csv( file , delimiter='\t')
     df = df.dropna(subset=['CANONICAL_SMILES'])
     return df
