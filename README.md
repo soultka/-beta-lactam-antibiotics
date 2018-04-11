@@ -20,7 +20,11 @@ __- [Week 3-4]__
 1. Practice basic multi-layer-perceptron.
 2. Find feature extractor and extract feature from chembl350.
 
-## 3. Conclusion
+## 3.Data plot
+
+![PCA3D](/test_result/PCA_3d/Figure_PCA3D_350.png "Feature analysis")
+
+## 4. Conclusion
 ...
 
 [Week 1]: /Weekly%20report/week_1.docx
