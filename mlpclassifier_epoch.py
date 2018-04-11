@@ -48,7 +48,7 @@ def plot_on_dataset(X, y, hidden, learing_late, batch_size=132):
     
 
 # load / generate some toy datasets
-df = pd.read_csv('C:\\Users\\parkchangho\\Documents\\Git\\-beta-lactam-antibiotics\\dataset\\bl112.txt', delimiter=',')
+df = pd.read_csv('dataset/bl112.txt', delimiter=',')
 columns = df.columns[0:-1]
 X = np.array(df[columns])
 X = X.astype(int)
